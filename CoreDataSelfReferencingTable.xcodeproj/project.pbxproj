@@ -14,6 +14,12 @@
 		55E39F2A1B0F5C500070584B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55E39F291B0F5C500070584B /* Images.xcassets */; };
 		55E39F2D1B0F5C500070584B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55E39F2B1B0F5C500070584B /* LaunchScreen.xib */; };
 		55E39F391B0F5C500070584B /* CoreDataSelfReferencingTableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E39F381B0F5C500070584B /* CoreDataSelfReferencingTableTests.swift */; };
+		55E559A81B0F71E900264AAE /* USAStateAbbrCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55E559A71B0F71E900264AAE /* USAStateAbbrCodes.plist */; };
+		55E559AE1B0F730400264AAE /* CountryAbbrCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55E559AD1B0F730400264AAE /* CountryAbbrCodes.plist */; };
+		55E559B01B0F731A00264AAE /* CANProvincesTerritoriesAbbrCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55E559AF1B0F731A00264AAE /* CANProvincesTerritoriesAbbrCodes.plist */; };
+		55E559B71B0F9B7E00264AAE /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E559B61B0F9B7E00264AAE /* Location.swift */; };
+		55E559BD1B0FB5E000264AAE /* CountriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E559BC1B0FB5E000264AAE /* CountriesTableViewController.swift */; };
+		55E559BF1B0FB97900264AAE /* StatesProvincesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E559BE1B0FB97900264AAE /* StatesProvincesTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +44,12 @@
 		55E39F321B0F5C500070584B /* CoreDataSelfReferencingTableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreDataSelfReferencingTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		55E39F371B0F5C500070584B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		55E39F381B0F5C500070584B /* CoreDataSelfReferencingTableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSelfReferencingTableTests.swift; sourceTree = "<group>"; };
+		55E559A71B0F71E900264AAE /* USAStateAbbrCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = USAStateAbbrCodes.plist; sourceTree = "<group>"; };
+		55E559AD1B0F730400264AAE /* CountryAbbrCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CountryAbbrCodes.plist; sourceTree = "<group>"; };
+		55E559AF1B0F731A00264AAE /* CANProvincesTerritoriesAbbrCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CANProvincesTerritoriesAbbrCodes.plist; sourceTree = "<group>"; };
+		55E559B61B0F9B7E00264AAE /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		55E559BC1B0FB5E000264AAE /* CountriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountriesTableViewController.swift; sourceTree = "<group>"; };
+		55E559BE1B0FB97900264AAE /* StatesProvincesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatesProvincesTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +91,10 @@
 		55E39F1C1B0F5C4F0070584B /* CoreDataSelfReferencingTable */ = {
 			isa = PBXGroup;
 			children = (
+				55E559B11B0F7B0100264AAE /* Model */,
 				55E39F1F1B0F5C500070584B /* AppDelegate.swift */,
+				55E559BE1B0FB97900264AAE /* StatesProvincesTableViewController.swift */,
+				55E559BC1B0FB5E000264AAE /* CountriesTableViewController.swift */,
 				55E39F241B0F5C500070584B /* ViewController.swift */,
 				55E39F261B0F5C500070584B /* Main.storyboard */,
 				55E39F291B0F5C500070584B /* Images.xcassets */,
@@ -93,6 +108,9 @@
 		55E39F1D1B0F5C4F0070584B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				55E559AF1B0F731A00264AAE /* CANProvincesTerritoriesAbbrCodes.plist */,
+				55E559A71B0F71E900264AAE /* USAStateAbbrCodes.plist */,
+				55E559AD1B0F730400264AAE /* CountryAbbrCodes.plist */,
 				55E39F1E1B0F5C4F0070584B /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -113,6 +131,14 @@
 				55E39F371B0F5C500070584B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		55E559B11B0F7B0100264AAE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				55E559B61B0F9B7E00264AAE /* Location.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,8 +221,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55E559A81B0F71E900264AAE /* USAStateAbbrCodes.plist in Resources */,
 				55E39F281B0F5C500070584B /* Main.storyboard in Resources */,
+				55E559AE1B0F730400264AAE /* CountryAbbrCodes.plist in Resources */,
 				55E39F2D1B0F5C500070584B /* LaunchScreen.xib in Resources */,
+				55E559B01B0F731A00264AAE /* CANProvincesTerritoriesAbbrCodes.plist in Resources */,
 				55E39F2A1B0F5C500070584B /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,7 +245,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				55E39F251B0F5C500070584B /* ViewController.swift in Sources */,
+				55E559BF1B0FB97900264AAE /* StatesProvincesTableViewController.swift in Sources */,
 				55E39F231B0F5C500070584B /* CoreDataSelfReferencingTable.xcdatamodeld in Sources */,
+				55E559B71B0F9B7E00264AAE /* Location.swift in Sources */,
+				55E559BD1B0FB5E000264AAE /* CountriesTableViewController.swift in Sources */,
 				55E39F201B0F5C500070584B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,6 +445,7 @@
 				55E39F3E1B0F5C500070584B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		55E39F3F1B0F5C500070584B /* Build configuration list for PBXNativeTarget "CoreDataSelfReferencingTableTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +454,7 @@
 				55E39F411B0F5C500070584B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

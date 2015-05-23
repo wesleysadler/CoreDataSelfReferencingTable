@@ -14,9 +14,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    let fileType: String = "plist"
+    let countryFile: String = "CountryAbbrCodes"
+    let usaFile: String = "USAStateAbbrCodes"
+    let canFile: String = "CANProvincesTerritoriesAbbrCodes"
+    
+    var countryDict: NSDictionary?
+    var canDict: NSDictionary?
+    var usaDict: NSDictionary?
 
+    
+    
+    var rowsCount: Int?
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        self.testDB()
+//        self.cleanDB()
+//        self.testDB()
+        
+        // Create the managed object context
+
+        if rowsCount == 0 {
+            
+            self.readPlistFiles()
+            
+            self.loadCountryData()
+            self.loadCANData()
+            self.loadUSAData()
+            
+            self.saveContext()
+        }
+        
         return true
     }
 
@@ -44,6 +74,213 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
 
+    // MARK: - Read rows in Location table
+    
+    func testDB() {
+        
+        var locations = [NSManagedObject]()
+        let fetchRequest = NSFetchRequest(entityName:"Location")
+        
+        var error: NSError?
+        
+        let fetchedResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: &error) as? [NSManagedObject]
+        
+        if let results = fetchedResults {
+            locations = results
+            rowsCount = locations.count
+            println("Number of Location Rows: \(locations.count)");
+            if !locations.isEmpty {
+                for location in locations as! [Location] {
+                    println("\(location.name) \(location.code)")
+                }
+            }
+        } else {
+            println("Could not fetch \(error), \(error!.userInfo)")
+        }
+
+    }
+    
+    func cleanDB() {
+        
+        var locations = [NSManagedObject]()
+        
+        var usaLocations = [NSManagedObject]()
+        var canLocations = [NSManagedObject]()
+        
+        let fetchRequest = NSFetchRequest(entityName:"Location")
+        
+        var error: NSError?
+        
+        let fetchedResults = managedObjectContext!.executeFetchRequest(fetchRequest, error: &error) as? [NSManagedObject]
+        let predicate = NSPredicate(format: "code IN %@", ["CAN", "USA"])
+        fetchRequest.predicate = predicate
+
+        if let results = fetchedResults {
+            locations = results
+            if !locations.isEmpty {
+                for location in locations as! [Location] {
+                    println("\(location.name) \(location.code)")
+//                    var relationshipLocations = location.hasStateProvince
+//                    for relationshipLocation in relationshipLocations {
+//                        var localRelationshipLocation = relationshipLocation as! NSManagedObject
+//                        managedObjectContext?.deleteObject(localRelationshipLocation)
+//                    }
+                    
+                    managedObjectContext?.deleteObject(location)
+                }
+                
+                var error: NSError?
+                if !managedObjectContext!.save(&error) {
+                    println("Could not save \(error), \(error?.userInfo)")
+                }
+            }
+        } else {
+            println("Could not fetch \(error), \(error!.userInfo)")
+        }
+        
+    }
+    
+    // MARK: - Read plist Files
+    
+    func readPlistFiles () {
+    
+        let countryPath = NSBundle.mainBundle().pathForResource(countryFile, ofType: fileType)
+        if let countryPathLocal = countryPath {
+            countryDict = NSDictionary(contentsOfFile: countryPathLocal)
+//            println()
+//            println(countryDict)
+        }
+        let canPath = NSBundle.mainBundle().pathForResource(canFile, ofType: fileType)
+        if let canPathLocal = canPath {
+            canDict = NSDictionary(contentsOfFile: canPathLocal)
+//            println()
+//            println(canDict)
+        }
+        let usaPath = NSBundle.mainBundle().pathForResource(usaFile, ofType: fileType)
+        if let usaPathLocal = usaPath {
+            usaDict = NSDictionary(contentsOfFile: usaPathLocal)
+//            println()
+//            println(usaDict)
+        }
+        
+    }
+    
+    func loadCountryData() {
+        
+        println()
+        
+        let keysSorted = countryDict?.keysSortedByValueUsingComparator({ ($0 as! String).compare($1 as! String) }) as! [String]
+        
+        for keyName in keysSorted {
+
+            let code = countryDict?.objectForKey(keyName) as! String
+            println("Key: " + keyName + " Code: " + code)
+            
+            var location: Location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext!) as! Location
+            location.name = keyName
+            location.code = code
+            
+            var error: NSError?
+            if !managedObjectContext!.save(&error) {
+                println("Could not save \(error), \(error?.userInfo)")
+            }
+        }
+    }
+    
+    func loadCANData() {
+    
+        var indexSet = 0;
+        
+        println()
+        // loop dictionary create location objects load into ordered set
+        var provincesSet: NSMutableOrderedSet = NSMutableOrderedSet()
+        
+        let keysSorted = canDict?.keysSortedByValueUsingComparator({ ($0 as! String).compare($1 as! String) }) as! [String]
+        
+        for keyName in keysSorted {
+
+            let code = canDict?.objectForKey(keyName) as! String
+            println("Key: " + keyName + " Code: " + code)
+            
+            var location: Location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext!) as! Location
+            location.name = keyName
+            location.code = code
+            
+            provincesSet.insertObject(location, atIndex: indexSet)
+            indexSet++
+            
+        }
+        
+        // save the provinces with country
+        
+        let fetchRequest = NSFetchRequest(entityName:"Location")
+        let predicate = NSPredicate(format: "code == %@", "CAN")
+        
+        fetchRequest.predicate = predicate
+        
+        var error: NSError?
+        if let fetchResults = managedObjectContext?.executeFetchRequest(fetchRequest, error: &error) {
+            var locationCountry = fetchResults.first as! Location
+            locationCountry.hasStateProvince = provincesSet
+            
+            if !managedObjectContext!.save(&error) {
+                println("Could not save \(error), \(error?.userInfo)")
+            }
+
+        } else {
+            println("Could not fetch \(error), \(error?.userInfo)")
+        }
+        
+        
+    }
+    
+    func loadUSAData() {
+        
+        var indexSet = 0;
+        
+        println()
+        // loop dictionary create location objects load into ordered set
+        var statesSet: NSMutableOrderedSet = NSMutableOrderedSet()
+        
+        let keysSorted = usaDict?.keysSortedByValueUsingComparator({ ($0 as! String).compare($1 as! String) }) as! [String]
+        
+        for keyName in keysSorted {
+            
+            let code = usaDict?.objectForKey(keyName) as! String
+            println("Key: " + keyName + " Code: " + code)
+            
+            var location: Location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext!) as! Location
+            location.name = keyName
+            location.code = code
+            
+            statesSet.insertObject(location, atIndex: indexSet)
+            indexSet++
+            
+        }
+        
+        // save the provinces with country
+        
+        let fetchRequest = NSFetchRequest(entityName:"Location")
+        let predicate = NSPredicate(format: "code == %@", "USA")
+        
+        fetchRequest.predicate = predicate
+        
+        var error: NSError?
+        if let fetchResults = managedObjectContext?.executeFetchRequest(fetchRequest, error: &error) {
+            var locationCountry = fetchResults.first as! Location
+            locationCountry.hasStateProvince = statesSet
+            
+            if !managedObjectContext!.save(&error) {
+                println("Could not save \(error), \(error?.userInfo)")
+            }
+            
+        } else {
+            println("Could not fetch \(error), \(error?.userInfo)")
+        }
+        
+        
+    }
+    
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {
